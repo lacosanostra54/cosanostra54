@@ -67,7 +67,8 @@ public class GetJob extends View
                     InstaAd cur = null;
                     for (InstaAd instaAd : vkAdList)
                     {
-                        if (mappers.getInstaAdRelationshipMapper().findByIds(user.getTelegramId(), user.getInstagramId()) == null)
+                        if (mappers.getInstaAdRelationshipMapper()
+                                .findByIds(user.getTelegramId(), instaAd.getInstaId()) == null)
                         {
                             cur = instaAd;
                             break;
