@@ -38,6 +38,48 @@ public class TelegramBot extends TelegramLongPollingBot
         instagram = newInstagram;
     }
 
+    private void parseVkQuery(SendMessage message, User user, Update update)
+    {
+        Integer vkGroupId = Integer.valueOf(update.getCallbackQuery().getData().substring(1));
+        VkAd vkAd = mappers.getVkAdMapper().findById(vkGroupId);
+        VkAdRelationship relationship = mappers.getVkAdRelationshipMapper().findByIds(user.getVkId(),
+                vkAd.getVkGroupId());
+        if (relationship == null || relationship.getType().equals("Complete"))
+            return;
+        if (vkChecker.isMember(user.getVkId(), vkAd.getVkGroupId().toString()))
+        {
+            relationship.setType("Complete");
+            mappers.getVkAdRelationshipMapper().update(relationship);
+            user.setMoney(user.getMoney() + vkAd.getAmount());
+            message.setText("Поздравляю вы выпонили задание");
+        }
+        else
+        {
+            message.setText("Вы не подписались");
+        }
+    }
+
+    private void parseInstagramQuery(SendMessage message, User user, Update update)
+    {
+        Long FollowedId = Long.valueOf(update.getCallbackQuery().getData().substring(1));
+        InstaAd instaAd = mappers.getInstaAdMapper().findById(FollowedId);
+        InstaAdRelationship relationship = mappers.getInstaAdRelationshipMapper()
+                .findByIds(user.getInstagramId(), instaAd.getInstaId());
+        if (relationship == null || relationship.getType().equals("Complete"))
+            return;
+        if (instagram.isFollower(user.getInstagramId(), instaAd.getInstaId()))
+        {
+            relationship.setType("Complete");
+            mappers.getInstaAdRelationshipMapper().update(relationship);
+            user.setMoney(user.getMoney() + instaAd.getAmount());
+            message.setText("Поздравляю вы выпонили задание");
+        }
+        else
+        {
+            message.setText("Вы не подписались");
+        }
+    }
+
     @Override
     public void onUpdateReceived(Update update)
     {
@@ -74,42 +116,11 @@ public class TelegramBot extends TelegramLongPollingBot
             message.setChatId(user.getTelegramId());
             if (update.getCallbackQuery().getData().toCharArray()[0] == 'V')
             {
-                Integer vkGroupId = Integer.valueOf(update.getCallbackQuery().getData().substring(1));
-                VkAd vkAd = mappers.getVkAdMapper().findById(vkGroupId);
-                VkAdRelationship relationship = mappers.getVkAdRelationshipMapper().findByIds(vkAd.getVkGroupId(), user.getTelegramId());
-                if (relationship == null || relationship.getType().equals("Complete"))
-                    return;
-                if (vkChecker.isMember(user.getVkId(), vkAd.getVkGroupId().toString()))
-                {
-                    relationship.setType("Complete");
-                    mappers.getVkAdRelationshipMapper().update(relationship);
-                    user.setMoney(user.getMoney() + vkAd.getAmount());
-                    message.setText("Поздравляю вы выпонили задание");
-                }
-                else
-                {
-                    message.setText("Вы не подписались");
-                }
+                parseVkQuery(message, user, update);
             }
             else
             {
-                Long FollowedId = Long.valueOf(update.getCallbackQuery().getData().substring(1));
-                InstaAd instaAd = mappers.getInstaAdMapper().findById(FollowedId);
-                InstaAdRelationship relationship = mappers.getInstaAdRelationshipMapper()
-                        .findByIds(user.getInstagramId(), instaAd.getInstaId());
-                if (relationship == null || relationship.getType().equals("Complete"))
-                    return;
-                if (instagram.isFollower(user.getInstagramId(), instaAd.getInstaId()))
-                {
-                    relationship.setType("Complete");
-                    mappers.getInstaAdRelationshipMapper().update(relationship);
-                    user.setMoney(user.getMoney() + instaAd.getAmount());
-                    message.setText("Поздравляю вы выпонили задание");
-                }
-                else
-                {
-                    message.setText("Вы не подписались");
-                }
+                parseInstagramQuery(message, user, update);
             }
         }
         try
@@ -128,14 +139,12 @@ public class TelegramBot extends TelegramLongPollingBot
     @Override
     public String getBotUsername()
     {
-        //
         return botUsername;
     }
 
     @Override
     public String getBotToken()
     {
-       //
         return botToken;
     }
 }

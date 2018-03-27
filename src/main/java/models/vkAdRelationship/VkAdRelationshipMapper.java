@@ -20,9 +20,9 @@ public class VkAdRelationshipMapper
         try
         {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO vk_ad_relationships(vk_group_id, telegram_id, type) VALUES(?, ?, ?)");
+                    "INSERT INTO vk_ad_relationships(vk_group_id, vk_user_id, type) VALUES(?, ?, ?)");
             statement.setInt(1, adRelationship.vkGroupId);
-            statement.setLong(2, adRelationship.telegramId);
+            statement.setLong(2, adRelationship.vkUserId);
             statement.setString(3, adRelationship.type);
             statement.executeUpdate();
             statement.close();
@@ -38,11 +38,11 @@ public class VkAdRelationshipMapper
         try(PreparedStatement statement = connection.prepareStatement(
                 "UPDATE vk_ad_relationships " +
                         "SET type = ?" +
-                        "WHERE telegram_id = ? AND vk_group_id = ?"))
+                        "WHERE vk_user_id = ? AND vk_group_id = ?"))
         {
             statement.setString(1, adRelationship.type);
+            statement.setLong(2, adRelationship.vkUserId);
             statement.setInt(3, adRelationship.vkGroupId);
-            statement.setLong(2, adRelationship.telegramId);
             statement.executeUpdate();
         }
         catch (SQLException exception)
@@ -51,19 +51,19 @@ public class VkAdRelationshipMapper
         }
     }
 
-    public VkAdRelationship findByIds(Integer vkGroupId, Long telegramId)
+    public VkAdRelationship findByIds(Integer vkUserId, Integer vkGroupId)
     {
         VkAdRelationship answer = null;
         try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM vk_ad_relationships " +
-                "WHERE telegram_id = ? AND vk_group_id = ?"))
+                "WHERE vk_user_id = ? AND vk_group_id = ?"))
         {
-            statement.setLong(1, telegramId);
+            statement.setLong(1, vkUserId);
             statement.setInt(2, vkGroupId);
             try(ResultSet resultSet = statement.executeQuery())
             {
                 if (resultSet.next())
                 {
-                    answer = new VkAdRelationship(resultSet.getLong("telegram_id"),
+                    answer = new VkAdRelationship(resultSet.getInt("vk_user_id"),
                             resultSet.getInt("vk_group_id"),
                             resultSet.getString("type"));
                 }

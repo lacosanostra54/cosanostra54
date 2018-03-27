@@ -2,13 +2,13 @@ package models.vkAdRelationship;
 
 public class VkAdRelationship
 {
-    Long telegramId;
+    Integer vkUserId;
     Integer vkGroupId;
     String type;
 
-    public VkAdRelationship(Long newTelegramId, Integer newVkAdId, String newType)
+    public VkAdRelationship(Integer newVkUserId, Integer newVkAdId, String newType)
     {
-        telegramId = newTelegramId;
+        vkUserId = newVkUserId;
         vkGroupId = newVkAdId;
         type = newType;
     }
@@ -28,14 +28,14 @@ public class VkAdRelationship
         return vkGroupId;
     }
 
-    public Long getTelegramId()
+    public Integer getVkUserId()
     {
-        return telegramId;
+        return vkUserId;
     }
 
-    public void setTelegramId(Long telegramId)
+    public void setVkUserId(Integer vkUserId)
     {
-        this.telegramId = telegramId;
+        this.vkUserId = vkUserId;
     }
 
     public void setVkGroupId(Integer vkGroupId)
