@@ -20,10 +20,12 @@ public class VkAdRelationshipMapper
         try
         {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO vk_ad_relationships(vk_group_id, vk_user_id, type) VALUES(?, ?, ?)");
+                    "INSERT INTO vk_ad_relationships(vk_group_id, vk_user_id, current_day, last_check_time) " +
+                            "VALUES(?, ?, ?, ?)");
             statement.setInt(1, adRelationship.vkGroupId);
-            statement.setLong(2, adRelationship.vkUserId);
-            statement.setString(3, adRelationship.type);
+            statement.setInt(2, adRelationship.vkUserId);
+            statement.setInt(3, adRelationship.currentDay);
+            statement.setLong(4, adRelationship.lastCheckTime);
             statement.executeUpdate();
             statement.close();
         }
@@ -37,12 +39,13 @@ public class VkAdRelationshipMapper
     {
         try(PreparedStatement statement = connection.prepareStatement(
                 "UPDATE vk_ad_relationships " +
-                        "SET type = ?" +
+                        "SET current_day = ?, last_check_time = ?" +
                         "WHERE vk_user_id = ? AND vk_group_id = ?"))
         {
-            statement.setString(1, adRelationship.type);
-            statement.setLong(2, adRelationship.vkUserId);
-            statement.setInt(3, adRelationship.vkGroupId);
+            statement.setInt(1, adRelationship.currentDay);
+            statement.setLong(2, adRelationship.lastCheckTime);
+            statement.setInt(3, adRelationship.vkUserId);
+            statement.setInt(4, adRelationship.vkGroupId);
             statement.executeUpdate();
         }
         catch (SQLException exception)
@@ -63,9 +66,8 @@ public class VkAdRelationshipMapper
             {
                 if (resultSet.next())
                 {
-                    answer = new VkAdRelationship(resultSet.getInt("vk_user_id"),
-                            resultSet.getInt("vk_group_id"),
-                            resultSet.getString("type"));
+                    answer = new VkAdRelationship(vkUserId, vkGroupId,
+                            resultSet.getInt("current_day"), resultSet.getLong("last_check_time"));
                 }
             }
         }

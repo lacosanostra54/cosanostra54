@@ -4,23 +4,35 @@ public class VkAdRelationship
 {
     Integer vkUserId;
     Integer vkGroupId;
-    String type;
+    Integer currentDay;
+    Long lastCheckTime;
 
-    public VkAdRelationship(Integer newVkUserId, Integer newVkAdId, String newType)
+    public VkAdRelationship(Integer newVkUserId, Integer newVkAdId, Integer newCurrentDay, long newCheckTime)
     {
         vkUserId = newVkUserId;
         vkGroupId = newVkAdId;
-        type = newType;
+        currentDay = newCurrentDay;
+        lastCheckTime = newCheckTime;
     }
 
-    public String getType()
+    public Long getLastCheckTime()
     {
-        return type;
+        return lastCheckTime;
     }
 
-    public void setType(String type)
+    public void setLastCheckTime(Long lastCheckTime)
     {
-        this.type = type;
+        this.lastCheckTime = lastCheckTime;
+    }
+
+    public Integer getCurrentDay()
+    {
+        return currentDay;
+    }
+
+    public void setCurrentDay(Integer currentDay)
+    {
+        this.currentDay = currentDay;
     }
 
     public Integer getVkGroupId()

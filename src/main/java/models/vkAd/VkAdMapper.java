@@ -22,7 +22,8 @@ public class VkAdMapper
             {
                 while (resultSet.next())
                 {
-                    ans.add(new VkAd(resultSet.getInt("vk_group_id"), resultSet.getDouble("amount")));
+                    ans.add(new VkAd(resultSet.getInt("vk_group_id"), resultSet.getInt("count_of_days"),
+                            resultSet.getDouble("amount")));
                 }
             }
         }
@@ -44,7 +45,8 @@ public class VkAdMapper
             {
                 if (resultSet.next())
                 {
-                    answer = new VkAd(vkGroupId, resultSet.getDouble("amount"));
+                    answer = new VkAd(vkGroupId, resultSet.getInt("count_of_days"),
+                            resultSet.getDouble("amount"));
                 }
             }
         }

@@ -137,7 +137,8 @@ public class GetJob extends View
                     InlineKeyboardButton CheckButton = new InlineKeyboardButton();
                     CheckButton.setText("Проверить");
                     CheckButton.setCallbackData("V" + cur.getVkGroupId().toString());
-                    VkAdRelationship relationship = new VkAdRelationship(user.getVkId(), cur.getVkGroupId(), "Processing");
+                    VkAdRelationship relationship = new VkAdRelationship(user.getVkId(), cur.getVkGroupId(),
+                            0, 0);
                     mappers.getVkAdRelationshipMapper().create(relationship);
                     buttons.get(1).add(CheckButton);
                     InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();

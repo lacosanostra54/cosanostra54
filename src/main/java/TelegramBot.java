@@ -1,5 +1,6 @@
 import helpers.instagram.Instagram;
 import helpers.qiwi.Qiwi;
+import helpers.time.Time;
 import helpers.vk.VkChecker;
 import models.Mappers;
 import models.instaAd.InstaAd;
@@ -44,14 +45,24 @@ public class TelegramBot extends TelegramLongPollingBot
         VkAd vkAd = mappers.getVkAdMapper().findById(vkGroupId);
         VkAdRelationship relationship = mappers.getVkAdRelationshipMapper().findByIds(user.getVkId(),
                 vkAd.getVkGroupId());
-        if (relationship == null || relationship.getType().equals("Complete"))
-            return;
         if (vkChecker.isMember(user.getVkId(), vkAd.getVkGroupId().toString()))
         {
-            relationship.setType("Complete");
-            mappers.getVkAdRelationshipMapper().update(relationship);
-            user.setMoney(user.getMoney() + vkAd.getAmount());
-            message.setText("Поздравляю вы выпонили задание");
+            if (relationship.getLastCheckTime() + Time.day > Time.getUnixTimestamp())
+            {
+                message.setText("Вы уже получили награду сегодня.\n в следующий раз вы сможете сделать это " +
+                    Time.unixTimestapToDate(relationship.getLastCheckTime() + Time.day).toString());
+            }
+            else
+            {
+                if (relationship.getCurrentDay() < vkAd.getCountOfDays())
+                {
+                    relationship.setCurrentDay(relationship.getCurrentDay() + 1);
+                    user.setMoney(user.getMoney() + vkAd.getAmount());
+                }
+                relationship.setLastCheckTime(Time.getUnixTimestamp());
+                mappers.getVkAdRelationshipMapper().update(relationship);
+                message.setText("Поздравляю вы выпонили задание");
+            }
         }
         else
         {
