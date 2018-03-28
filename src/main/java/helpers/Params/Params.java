@@ -7,6 +7,13 @@ public class Params
     private String qiwiAcessToken;
     private String telegramBotUsername;
     private String telegramBotToken;
+    private PostgreSqlParams postgreSqlParams;
+
+
+    public PostgreSqlParams getPostgreSqlParams()
+    {
+        return postgreSqlParams;
+    }
 
     public Integer getVkAppid()
     {
@@ -31,6 +38,11 @@ public class Params
     public String getVkAccessToken()
     {
         return vkAccessToken;
+    }
+
+    public void setPostgreSqlParams(PostgreSqlParams postgreSqlParams)
+    {
+        this.postgreSqlParams = postgreSqlParams;
     }
 
     public void setQiwiAcessToken(String qiwiAcessToken)

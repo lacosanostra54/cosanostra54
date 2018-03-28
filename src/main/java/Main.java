@@ -43,7 +43,9 @@ public class Main
         TelegramBotsApi botApi = new TelegramBotsApi();
         try
         {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/TelegramBot", "askhat", "");
+            Connection connection = DriverManager.getConnection(params.getPostgreSqlParams().getUrl(),
+                    params.getPostgreSqlParams().getUsername(),
+                    params.getPostgreSqlParams().getPassword());
             try
             {
                 botApi.registerBot(new TelegramBot(connection, new VkChecker(params.getVkAppid(),

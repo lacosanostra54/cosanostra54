@@ -83,7 +83,8 @@ public class GetJob extends View
                     InlineKeyboardButton CheckButton = new InlineKeyboardButton();
                     CheckButton.setText("Проверить");
                     CheckButton.setCallbackData("I" + cur.getInstaId().toString());
-                    InstaAdRelationship relationship = new InstaAdRelationship(user.getInstagramId(), cur.getInstaId(), "Processing");
+                    InstaAdRelationship relationship = new InstaAdRelationship(user.getInstagramId(), cur.getInstaId(),
+                            0, 0L);
                     mappers.getInstaAdRelationshipMapper().create(relationship);
                     buttons.get(1).add(CheckButton);
                     InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
@@ -138,7 +139,7 @@ public class GetJob extends View
                     CheckButton.setText("Проверить");
                     CheckButton.setCallbackData("V" + cur.getVkGroupId().toString());
                     VkAdRelationship relationship = new VkAdRelationship(user.getVkId(), cur.getVkGroupId(),
-                            0, 0);
+                            0, 0L);
                     mappers.getVkAdRelationshipMapper().create(relationship);
                     buttons.get(1).add(CheckButton);
                     InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();

@@ -22,7 +22,8 @@ public class InstaAdMapper
             {
                 while (resultSet.next())
                 {
-                    ans.add(new InstaAd(resultSet.getLong("instagram_id"), resultSet.getString("url"), resultSet.getDouble("amount")));
+                    ans.add(new InstaAd(resultSet.getLong("instagram_id"), resultSet.getString("url"),
+                            resultSet.getInt("count_of_days"), resultSet.getDouble("amount")));
                 }
             }
         }
@@ -44,7 +45,8 @@ public class InstaAdMapper
             {
                 if (resultSet.next())
                 {
-                    answer = new InstaAd(instaId, resultSet.getString("url"), resultSet.getDouble("amount"));
+                    answer = new InstaAd(instaId, resultSet.getString("url"), resultSet.getInt("count_of_days"),
+                            resultSet.getDouble("amount"));
                 }
             }
         }

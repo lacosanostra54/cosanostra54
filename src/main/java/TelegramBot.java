@@ -76,14 +76,24 @@ public class TelegramBot extends TelegramLongPollingBot
         InstaAd instaAd = mappers.getInstaAdMapper().findById(FollowedId);
         InstaAdRelationship relationship = mappers.getInstaAdRelationshipMapper()
                 .findByIds(user.getInstagramId(), instaAd.getInstaId());
-        if (relationship == null || relationship.getType().equals("Complete"))
-            return;
         if (instagram.isFollower(user.getInstagramId(), instaAd.getInstaId()))
         {
-            relationship.setType("Complete");
-            mappers.getInstaAdRelationshipMapper().update(relationship);
-            user.setMoney(user.getMoney() + instaAd.getAmount());
-            message.setText("Поздравляю вы выпонили задание");
+            if (relationship.getLastCheckTime() + Time.day > Time.getUnixTimestamp())
+            {
+                message.setText("Вы уже получили награду сегодня.\n в следующий раз вы сможете сделать это " +
+                        Time.unixTimestapToDate(relationship.getLastCheckTime() + Time.day).toString());
+            }
+            else
+            {
+                if (relationship.getCurrentDay() < instaAd.getCountOfDays())
+                {
+                    relationship.setCurrentDay(relationship.getCurrentDay() + 1);
+                    user.setMoney(user.getMoney() + instaAd.getAmount());
+                }
+                relationship.setLastCheckTime(Time.getUnixTimestamp());
+                mappers.getInstaAdRelationshipMapper().update(relationship);
+                message.setText("Поздравляю вы выпонили задание");
+            }
         }
         else
         {
