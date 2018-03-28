@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
-nohup mvn exec:java &
+killall python3
 nohup python3 src/main/python/InstagramApiServer.py &
+killall java
+mvn install
+nohup mvn exec:java &
