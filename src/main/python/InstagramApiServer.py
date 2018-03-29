@@ -2,6 +2,7 @@ from InstagramAPI import InstagramAPI
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
+
 def get_by_id(user_id):
     global API
     following = []
@@ -18,6 +19,7 @@ def get_by_id(user_id):
     }
     return unique_following
 
+
 def get_id(username):
     API.searchUsername(username)
     json = API.LastJson
@@ -26,8 +28,8 @@ def get_id(username):
     else:
         return None
 
-class Server(BaseHTTPRequestHandler):
 
+class Server(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.headers["Type"] == "Check":
             id = self.headers["FollowerId"]
